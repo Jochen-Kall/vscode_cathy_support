@@ -3,6 +3,9 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
+// import * as JSON from 'json';
+// require(JSON);
+
 // lets see if we can define a tree data provider for Catharsys infos
 // adapted from example code https://code.visualstudio.com/api/extension-guides/tree-view
 
@@ -124,6 +127,56 @@ export function activate(context: vscode.ExtensionContext) {
 			console.log('finished');
 		});
 		
+
+		// lets see if we can pass and receive a json serialized more complex data 
+
+		var myPythonScriptPath = 'C:\\Users\\Joche\\Desktop\\vscode_cathy_support\\src\\return_json.py';
+
+		let data_in = {x:3};
+
+		let python_args = [JSON.stringify(data_in)];
+		var options = {mode:'text',
+						args:python_args};
+
+
+
+		// Use python shell 
+		var PythonShell = require('python-shell');
+
+
+		// PythonShell.PythonShell.run(myPythonScriptPath,options,function(err:any,message:any) {
+		// 	if (err) {
+		// 		console.log("da ist was schief gegangen!")
+		// 	}
+		// 	console.log(message);
+		// 	let data = JSON.parse(message);
+		// 	console.log(data.x);
+		// 	console.log(data.y);
+			
+		// });
+
+		var pyshell = new PythonShell.PythonShell(myPythonScriptPath,options=options);
+
+
+		
+		pyshell.on('message', function (message: any) {
+			// received a message sent from the Python script (a simple "print" statement)
+			console.log(message);
+			let data = JSON.parse(message);
+			console.log(data.x);
+			console.log(data.y);			
+		});
+		
+		// end the input stream and allow the process to exit
+		pyshell.end(function (err: any) {
+			if (err){
+				throw err;
+			};
+		
+			console.log('finished');
+		});
+		
+
 
 	});
 
