@@ -99,6 +99,32 @@ export function activate(context: vscode.ExtensionContext) {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from asdf!');
+
+		console.log('python shit starting on vscode side');
+
+		// lets see if we can manage to execute a python script as well which returns a string we print in our vscode shell
+		// jop, works
+		var myPythonScriptPath = 'C:\\Users\\Joche\\Desktop\\vscode_cathy_support\\src\\printhello.py';
+
+		// Use python shell
+		var PythonShell = require('python-shell');
+		var pyshell = new PythonShell.PythonShell(myPythonScriptPath);
+		
+		pyshell.on('message', function (message: any) {
+			// received a message sent from the Python script (a simple "print" statement)
+			console.log(message);
+		});
+		
+		// end the input stream and allow the process to exit
+		pyshell.end(function (err: any) {
+			if (err){
+				throw err;
+			};
+		
+			console.log('finished');
+		});
+		
+
 	});
 
 	// register run command to execute stashed catharsys commands
